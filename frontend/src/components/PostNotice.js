@@ -13,7 +13,8 @@ function PostNotice() {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:5000/notices', {
+      const url = 'https://tiet-feedback-api.vercel.app/notices';
+      const response = await axios.post(url, {
         title,
         content,
       });
