@@ -6,7 +6,7 @@ function ViewNotices() {
 
   const fetchNotices = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/notices');
+      const response = await axios.get('https://tiet-feedback-api.vercel.app/notices');
       setNotices(response.data);
     } catch (error) {
       console.error('Error fetching notices:', error);
