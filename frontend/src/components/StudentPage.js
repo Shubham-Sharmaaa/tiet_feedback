@@ -132,7 +132,8 @@ const StudentPage = () => {
   // Submit Feedback
   const submitFeedback = async () => {
     try {
-      await axios.post("http://localhost:5000/student/feedback", { teacher, course, feedback });
+      const url = "https://tiet-feedback-api.vercel.app/student/feedback"
+      await axios.post(url, { teacher, course, feedback });
       alert("Feedback submitted successfully!");
       setTeacher("");
       setCourse("");
@@ -145,7 +146,7 @@ const StudentPage = () => {
   // Fetch Notices
   const fetchNotices = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/student/notices");
+      const { data } = await axios.get("https://tiet-feedback-api.vercel.app/student/notices");
       setNotices(data);
     } catch (err) {
       console.error("Error fetching notices:", err);
