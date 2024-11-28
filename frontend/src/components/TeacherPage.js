@@ -10,7 +10,7 @@ const TeacherPage = () => {
 
   const postNotice = async () => {
     try {
-      await axios.post("http://localhost:5000/teacher/notices", { title, description });
+      await axios.post("https://tiet-feedback-api.vercel.app/teacher/notices", { title, description });
       alert("Notice posted successfully!");
       setTitle("");
       setDescription("");
@@ -21,7 +21,7 @@ const TeacherPage = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/teacher/feedback");
+      const { data } = await axios.get("https://tiet-feedback-api.vercel.app/teacher/feedback");
       setFeedbacks(data);
     } catch (err) {
       console.error("Error fetching feedback:", err);
