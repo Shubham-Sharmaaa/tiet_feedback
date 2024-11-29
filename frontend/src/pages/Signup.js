@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 
-function Login() {
-    const [loginInfo, setLoginInfo] = useState({
+function Signup() {
+
+    const [signupInfo, setSignupInfo] = useState({
+        name: '',
         email: '',
         password: '',
         role: 'student', // Default role
@@ -13,73 +15,62 @@ function Login() {
 
     const navigate = useNavigate();
 
- 
-
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setLoginInfo((prev) => ({
+        setSignupInfo((prev) => ({
             ...prev,
             [name]: type === "radio" ? (checked ? value : prev[name]) : value,
-        }));
+        }));
     };
- 
-    const handleLogin = async (e) => {
-        e.preventDefault(); // Prevent form default submission
-    
-        const { email, password, role } = loginInfo;
-    
-        // Validate required fields
-        if (!email || !password) {
-            return handleError("Email and password are required.");
+
+    const handleSignup = async (e) => {
+        e.preventDefault();
+        const { name, email, password, role } = signupInfo;
+        if (!name || !email || !password) {
+            return handleError('Name, email, and password are required.');
         }
-    
         try {
-            // Make a login request to the backend
-            const response = await fetch("http://localhost:5000/auth/login", {
+            const response = await fetch('http://localhost:5000/auth/signup', {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password, role }), // Send role explicitly
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(signupInfo),
             });
-    
-            // Check if response is successful
-            if (!response.ok) {
-                const errorData = await response.json();
-                const errorMessage = errorData?.message || "Login failed.";
-                throw new Error(errorMessage);
-            }
-    
-            // Parse JSON response
-            const { success, message, jwtToken, name } = await response.json();
-    
+
+            const result = await response.json();
+            const { success, message, error } = result;
+
             if (success) {
-                handleSuccess(message); // Display success notification
-    
-                // Save user data to localStorage
-                localStorage.setItem("token", jwtToken);
-                localStorage.setItem("loggedInUser", name);
-    
-                // Navigate based on the role
+                handleSuccess(message);
                 setTimeout(() => {
-                    const redirectPath =
-                        role === "teacher"
-                            ? "/teacher" // Updated to /teacher
-                            : role === "student"
-                            ? "/student" // Updated to /student
-                            : "/home"; // Fallback route
-                    navigate(redirectPath);
+                    navigate('/login');
                 }, 1000);
+            } else if (error) {
+                const details = error?.details[0]?.message;
+                handleError(details || 'Signup failed.');
             } else {
-                handleError(message); // Display error message if unsuccessful
+                handleError(message);
             }
-        } catch (error) {
-            console.error("Login error:", error.message); // Log error to console for debugging
-            handleError(error.message || "An unexpected error occurred."); // Display error notification
+        } catch (err) {
+            console.error("Signup error:", err);
+            handleError(err.message || 'An unexpected error occurred.');
         }
     };
+
     return (
         <div className='container'>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
+            <h1>Signup</h1>
+            <form onSubmit={handleSignup}>
+                <div>
+                    <label htmlFor='name'>Name</label>
+                    <input
+                        onChange={handleChange}
+                        type='text'
+                        name='name'
+                        autoFocus
+                        placeholder='Enter your name...'
+                        value={signupInfo.name}
+                    />
+                </div>
                 <div>
                     <label htmlFor='email'>Email</label>
                     <input
@@ -87,7 +78,7 @@ function Login() {
                         type='email'
                         name='email'
                         placeholder='Enter your email...'
-                        value={loginInfo.email}
+                        value={signupInfo.email}
                     />
                 </div>
                 <div>
@@ -97,12 +88,11 @@ function Login() {
                         type='password'
                         name='password'
                         placeholder='Enter your password...'
-                        value={loginInfo.password}
+                        value={signupInfo.password}
                     />
                 </div>
                 <div>
-                <div>
-    <label>Role:</label>
+                <label>Role:</label>
     <div className="radio-group">
         <label className="radio-option">
             <span>Student</span>
@@ -111,7 +101,7 @@ function Login() {
                 id="student"
                 name="role"
                 value="student"
-                checked={loginInfo.role === 'student'}
+                checked={signupInfo.role === 'student'}
                 onChange={handleChange}
             />
         </label>
@@ -122,16 +112,15 @@ function Login() {
                 id="teacher"
                 name="role"
                 value="teacher"
-                checked={loginInfo.role === 'teacher'}
+                checked={signupInfo.role === 'teacher'}
                 onChange={handleChange}
             />
         </label>
     </div>
-</div>
                 </div>
-                <button type='submit'>Login</button>
-                <span>Doesn't have an account?
-                    <Link to="/signup">Signup</Link>
+                <button type='submit'>Signup</button>
+                <span>Already have an account?
+                    <Link to="/login">Login</Link>
                 </span>
             </form>
             <ToastContainer />
@@ -139,4 +128,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Signup;
