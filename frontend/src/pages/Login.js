@@ -238,28 +238,31 @@ function Login() {
                 </div>
                 <div>
                     <label>Role:</label>
-                    <div>
-                        <input
-                            type="radio"
-                            id="student"
-                            name="role"
-                            value="student"
-                            checked={loginInfo.role === 'student'}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="student">Student</label>
-                    </div>
-                    <div>
-                        <input
-                            type="radio"
-                            id="teacher"
-                            name="role"
-                            value="teacher"
-                            checked={loginInfo.role === 'teacher'}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="teacher">Teacher</label>
-                    </div>
+    <div className="radio-group">
+        <label className="radio-option">
+            <span>Student</span>
+            <input
+                type="radio"
+                id="student"
+                name="role"
+                value="student"
+                checked={loginInfo.role === 'student'}
+                onChange={handleChange}
+            />
+        </label>
+        <label className="radio-option">
+            <span>Teacher</span>
+            <input
+                type="radio"
+                id="teacher"
+                name="role"
+                value="teacher"
+                checked={loginInfo.role === 'teacher'}
+                onChange={handleChange}
+            />
+        </label>
+    </div>
+</div>
                 </div>
                 <button type='submit'>Login</button>
                 <span>Doesn't have an account?
